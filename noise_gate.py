@@ -39,8 +39,9 @@ if __name__ == "__main__":
     data["fft"] = fft(np.array(data["mono"]))
 
     alt_fft = []
+    max_fourier_coeff = max(abs(data["fft"]))*0.4
     for x in data["fft"]:
-        if abs(x) > (max(abs(data["fft"]))*0.4):
+        if abs(x) > max_fourier_coeff:
             alt_fft.append(x)
         else:
             alt_fft.append(0)
