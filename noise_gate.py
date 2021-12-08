@@ -24,6 +24,7 @@ def generate_audio(freqs, freq_strengths, sampling_rate=44100, length=1.0):
 
 if __name__ == "__main__":
     input_filename = input("Please input filename here: ")
+
     if input_filename[-3:] != 'wav':
         print('WARNING!! Input File format should be *.wav')
         sys.exit()
@@ -32,10 +33,9 @@ if __name__ == "__main__":
 
     data = pd.DataFrame(data)
     data = data.drop(range(44100, len(data)), axis=0)
-    data = data.drop(1, axis=1)
-    data.columns = ["mono"]
 
-    data["theory"] = generate_audio(freqs=[440], freq_strengths=[2000], length=1.0)
+    data.columns = ["mono"]
+    data["theory"] = generate_audio(freqs=[440], freq_strengths=[5150], length=1.0)
     data["fft"] = fft(np.array(data["mono"]))
 
     alt_fft = []
@@ -51,14 +51,21 @@ if __name__ == "__main__":
 
     data["final mono"] = np.array(data["alt mono"]).real
 
+    plt.plot(data["mono"][0:1000])
+    plt.legend(["Original Audio"])
+    plt.xlabel("Time")
+    plt.ylabel("Relative air pressure")
+    plt.show()
+
     plt.plot(abs(data["fft"]))
-    plt.ylabel("Strength of frequency in recording")
-    plt.xlabel("Frequency")
+    plt.ylabel("Relative presence of frequency in recording")
+    plt.xlabel("Frequency (Hz)")
     plt.show()
 
     plt.plot(data["mono"][0:1000])
     plt.plot(data["final mono"][0:1000])
     plt.plot(data["theory"][0:1000])
-    plt.legend(["original audio", "cleaned audio", "theoretical audio"])
-    plt.xlabel("time")
+    plt.legend(["Original Audio", "Cleaned Audio", "Theoretical Audio"])
+    plt.xlabel("Time")
+    plt.ylabel("Relative air pressure")
     plt.show()

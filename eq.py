@@ -28,6 +28,7 @@ def eq(fourier_coeffs, subbass, bass, low_mids, high_mids, presence, brilliance)
 
 if __name__ == "__main__":
     input_filename = input("Please input filename here: ")
+
     if input_filename[-3:] != 'wav':
         print('WARNING!! Input File format should be *.wav')
         sys.exit()
@@ -36,7 +37,7 @@ if __name__ == "__main__":
 
     data = pd.DataFrame(data)
     data = data.drop(range(44100, len(data)), axis=0)
-    data = data.drop(1, axis=1)
+
     data.columns = ["mono"]
 
     data["fft"] = fft(np.array(data["mono"]))
@@ -44,9 +45,9 @@ if __name__ == "__main__":
 
     plt.plot(abs(data["fft"]))
     plt.plot(abs(data["alt fft"]))
-    plt.ylabel("Strength of frequency in recording")
-    plt.xlabel("Frequency")
     plt.legend(["Original DFT", "Altered DFT"])
+    plt.ylabel("Relative presence of frequency in recording")
+    plt.xlabel("Frequency (Hz)")
 
     n = len(data)
     bands = [16, 60, 250, 2000, 4000, 6000, 16000]
@@ -61,6 +62,7 @@ if __name__ == "__main__":
 
     plt.plot(data["mono"][0:1000])
     plt.plot(data["final mono"][0:1000])
-    plt.legend(["original audio", "cleaned audio", "theoretical audio"])
-    plt.xlabel("time")
+    plt.legend(["Original Audio", "Cleaned Audio"])
+    plt.xlabel("Time")
+    plt.ylabel("Relative air pressure")
     plt.show()
